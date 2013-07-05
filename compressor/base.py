@@ -92,16 +92,19 @@ class Compressor(object):
             # call path first so remote storages don't make it to exists,
             # which would cause network I/O
             filename = self.storage.path(basename)
+            print "!", filename, basename
             if not self.storage.exists(basename):
                 filename = None
         except NotImplementedError:
             # remote storages don't implement path, access the file locally
             if compressor_file_storage.exists(basename):
                 filename = compressor_file_storage.path(basename)
+                print "@", filename
         # secondly try to find it with staticfiles (in debug mode)
         if not filename and self.finders:
             filename = self.finders.find(urllib.url2pathname(basename))
         if filename:
+            print filename
             return filename
         # or just raise an exception as the last resort
         raise UncompressableFileError(
